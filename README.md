@@ -29,8 +29,14 @@ if err != nil {
 * トークルーム用のトークンは、`<用途>`を`トークルーム名(を英数にしたもの)`を使う
 
 
-
-
 ### References
 * [LINE Notify](https://notify-bot.line.me/ja/)
 * [LINE Notify API Document](https://notify-bot.line.me/doc/ja/)
+
+
+## slack
+
+
+### References
+* [golang で始める Slack bot 開発 - at kaneshin](http://blog.kaneshin.co/entry/2016/12/03/162653)
+* [nlopes/slack](https://github.com/nlopes/slack)
