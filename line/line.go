@@ -6,8 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"../util"
-	// TODO: githubのパスにする
+	"github.com/cipepser/bots/util"
 )
 
 const (
