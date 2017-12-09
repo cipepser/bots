@@ -34,6 +34,25 @@ if err != nil {
 * [LINE Notify API Document](https://notify-bot.line.me/doc/ja/)
 
 
+## facebook
+
+### Houw to user
+
+```go
+
+URL = "https://graph.facebook.com/v2.11/<user name>/feed"
+
+f, err := facebook.GetFeed(URL)
+if err != nil {
+  panic(err)
+}
+
+```
+
+### References
+* [curlでFacebook API叩くまでがわりとめんどかったのでメモ - DRYな備忘録](http://otiai10.hatenablog.com/entry/2014/11/26/152404)
+* [アクセス許可のリファレンス - Facebookログイン](https://developers.facebook.com/docs/facebook-login/permissions/)
+
 ## slack
 
 
