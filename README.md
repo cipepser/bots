@@ -11,10 +11,24 @@
 
 ## LINE
 
+### How to Use
+
+```go
+
+msg := "hello"
+
+err := line.SendMessage(msg)
+if err != nil {
+  panic(err)
+}
+
+```
 
 ### トークン
 
 * トークルーム用のトークンは、`<用途>`を`トークルーム名(を英数にしたもの)`を使う
+
+
 
 
 ### References
