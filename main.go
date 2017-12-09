@@ -1,13 +1,19 @@
 package main
 
-import "./line"
+import (
+	"fmt"
+
+	"./facebook"
+)
 
 func main() {
-	msg := "hello"
+	URL = "https://graph.facebook.com/v2.11/<user name>/feed"
 
-	err := line.SendMessage(msg)
+	f, err := facebook.GetFeed(URL)
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println(f)
 
 }
