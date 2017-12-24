@@ -36,7 +36,7 @@ if err != nil {
 
 ## facebook
 
-### Houw to user
+### How to use
 
 ```go
 
