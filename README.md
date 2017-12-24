@@ -55,6 +55,8 @@ if err != nil {
 
 ## slack
 
+[golang で始める Slack bot 開発 - at kaneshin](http://blog.kaneshin.co/entry/2016/12/03/162653)にアクセストークンの取得方法とライブラリの使い方が書いてあるので参照
+
 
 ### References
 * [golang で始める Slack bot 開発 - at kaneshin](http://blog.kaneshin.co/entry/2016/12/03/162653)
