@@ -36,7 +36,7 @@ if err != nil {
 
 ## facebook
 
-### How to use
+### How to Use
 
 ```go
 
@@ -55,7 +55,37 @@ if err != nil {
 
 ## slack
 
-[golang で始める Slack bot 開発 - at kaneshin](http://blog.kaneshin.co/entry/2016/12/03/162653)にアクセストークンの取得方法とライブラリの使い方が書いてあるので参照
+[golang で始める Slack bot 開発 - at kaneshin](http://blog.kaneshin.co/entry/2016/12/03/162653)にアクセストークンの取得方法とライブラリの使い方が書いてあるので参照。自分が使いそうなものをまとめると以下。
+
+### How to Use
+
+#### 準備
+
+```go
+
+
+
+```
+
+#### メッセージを送る
+
+```go
+
+
+
+```
+#### メッセージを受け取る
+
+```go
+
+
+
+```
+
+
+
+### トークン
+* API tokenはbotごとに割り当てられるため、`<用途>`を`bot名`としたものを使う
 
 
 ### References
