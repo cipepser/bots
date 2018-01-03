@@ -78,11 +78,18 @@ go rtm.ManageConnection()
 
 #### メッセージを送る
 
+送信先の`channel`を設定する必要があり、`channel`の`id`は[channels.list](https://api.slack.com/methods/channels.list/test)で取得できる。
+
+`Generate tokens to test with here`からトークンを作った状態で`Test Method`を押すとスペースのchannel listが得られる。
+
+
 ```go
 
-
+msg := "This is a sample message"
+rtm.SendMessage(rtm.NewOutgoingMessage(msg, channel))
 
 ```
+
 #### メッセージを受け取る
 
 ```go
