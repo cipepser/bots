@@ -92,13 +92,29 @@ rtm.SendMessage(rtm.NewOutgoingMessage(msg, channel))
 
 #### メッセージを受け取る
 
+`rtm.IncomingEvents`チャンネルを介して、イベントループを回す。
+`rtm.IncomingEvents.Data.(type)`でそれぞれのイベントごとに処理を変えられる。  
+下記の`ev.Channel`でメッセージが送られてきたchannelへレスポンスを返せる。
+
 ```go
 
-
+for {
+  select {
+  case msg := <-rtm.IncomingEvents:
+    switch ev := msg.Data.(type) {
+    case *slack.HelloEvent:
+      log.Print("bot start")
+    case *slack.MessageEvent:
+      log.Printf("Message: %v\n", ev)
+      rtm.SendMessage(rtm.NewOutgoingMessage("new message", ev.Channel))
+    case *slack.InvalidAuthEvent:
+      log.Print("Invalid credentials")
+      return
+    }
+  }
+}
 
 ```
-
-
 
 ### トークン
 * API tokenはbotごとに割り当てられるため、`<用途>`を`bot名`としたものを使う
