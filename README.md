@@ -63,8 +63,15 @@ if err != nil {
 
 #### 準備
 
+`slack_<bot名>.json`内の`api_token`をもとにRTM(Real Time Message) connectionを作成し、goroutine化する。
+
 ```go
 
+rtm, err := myslack.NewRTM()
+if err != nil {
+  panic(err)
+}
+go rtm.ManageConnection()
 
 
 ```
