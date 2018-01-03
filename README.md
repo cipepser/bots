@@ -53,7 +53,9 @@ if err != nil {
 * [curlでFacebook API叩くまでがわりとめんどかったのでメモ - DRYな備忘録](http://otiai10.hatenablog.com/entry/2014/11/26/152404)
 * [アクセス許可のリファレンス - Facebookログイン](https://developers.facebook.com/docs/facebook-login/permissions/)
 
+
 ## slack
+[nlopes/slack](https://github.com/nlopes/slack)とパッケージ名が衝突したので、自作packageの名前は`myslack`とする。
 
 [golang で始める Slack bot 開発 - at kaneshin](http://blog.kaneshin.co/entry/2016/12/03/162653)にアクセストークンの取得方法とライブラリの使い方が書いてあるので参照。自分が使いそうなものをまとめると以下。
 
