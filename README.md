@@ -120,6 +120,86 @@ for {
 * API tokenはbotごとに割り当てられるため、`<用途>`を`bot名`としたものを使う
 
 
+## 複数サービスの連携
+
+`chan`を使うと簡単に書ける。以下ではslackからメッセージを受信したら、そのメッセージをLINEに送る例
+
+
+```go
+
+package main
+
+import (
+	"log"
+
+	"github.com/nlopes/slack"
+
+	"./line"
+	"./myslack"
+)
+
+func main() {
+	// メッセージをやり取りするためのchannel
+	ch := make(chan string)
+
+	// slack bot起動
+	go func() {
+		rtm, err := myslack.NewRTM()
+		if err != nil {
+			panic(err)
+		}
+
+		go rtm.ManageConnection()
+
+		for {
+			select {
+			case msg := <-rtm.IncomingEvents: // slackからのメッセージ受信
+				switch ev := msg.Data.(type) {
+				case *slack.MessageEvent:
+					log.Print(ev)
+					ch <- ev.Msg.Text
+				case *slack.HelloEvent:
+					log.Print("bot start")
+				case *slack.InvalidAuthEvent:
+					log.Print("Invalid credentials")
+				}
+			}
+		}
+	}()
+
+	for {
+		select {
+		case msg := <-ch: // LINEにメッセージを送る
+			log.Print("message recieved")
+			err := line.SendMessage(msg)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
+}
+
+```
+
+
+## 定期的にポーリングしたいとき
+
+```go
+
+func main() {
+	t := time.NewTicker(60 * time.Second)
+	defer t.Stop()
+
+	for {
+		select {
+		case <-t.C:
+      doSomething()
+		}
+	}
+}
+
+```
+
 ### References
 * [golang で始める Slack bot 開発 - at kaneshin](http://blog.kaneshin.co/entry/2016/12/03/162653)
 * [nlopes/slack](https://github.com/nlopes/slack)
