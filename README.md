@@ -58,7 +58,7 @@ if err := line.SendImage(msg, f, filename); err != nil {
 ### References
 * [LINE Notify](https://notify-bot.line.me/ja/)
 * [LINE Notify API Document](https://notify-bot.line.me/doc/ja/)
-
+* [Is this a bug of “image” package? - Go Forum](https://forum.golangbridge.org/t/is-this-a-bug-of-image-package/4362)
 
 ## facebook
 
