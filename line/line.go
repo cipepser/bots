@@ -3,13 +3,15 @@ package line
 import (
 	"bytes"
 	"errors"
-	"image"
+	"image/jpeg"
+	"image/png"
 	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
 	"net/url"
+	"path/filepath"
 	"strings"
 
 	"github.com/cipepser/bots/util"
@@ -18,7 +20,6 @@ import (
 const (
 	// URL is an endpoint of LINE notify
 	URL = "https://notify-api.line.me/api/notify"
-	// URL = "http://localhost:8080"
 )
 
 type Token struct {
@@ -106,9 +107,11 @@ func SendImage(msg string, img io.Reader, filename string) error {
 	}
 	part.Set("Content-Disposition", `form-data; name="imageFile"; filename=`+filename)
 
-	var buf bytes.Buffer
-	tee := io.TeeReader(img, &buf)
-	_, format, err := image.DecodeConfig(tee)
+	// var buf bytes.Buffer
+	// tee := io.TeeReader(img, &buf)
+	// _, format, err := image.DecodeConfig(tee)
+
+	img, format, err := checkImageFormat(img, filename)
 	if err != nil {
 		return err
 	}
@@ -127,7 +130,7 @@ func SendImage(msg string, img io.Reader, filename string) error {
 		log.Fatal(err)
 	}
 
-	io.Copy(fw, &buf)
+	io.Copy(fw, img)
 	w.Close() // boundaryの書き込み
 	req, err := http.NewRequest("POST", u.String(), &b)
 	if err != nil {
@@ -154,4 +157,37 @@ func SendImage(msg string, img io.Reader, filename string) error {
 	// *******************************
 
 	return nil
+}
+
+// checkImageFormat validates an image file is not illegal and
+// returns image as io.Reader and file format.
+func checkImageFormat(r io.Reader, filename string) (io.Reader, string, error) {
+	ext := filepath.Ext(filename)
+
+	var b bytes.Buffer
+	if ext == ".jpeg" || ext == ".jpg" || ext == ".JPEG" || ext == ".JPG" {
+		ext = "jpeg"
+		img, err := jpeg.Decode(r)
+		if err != nil {
+			return nil, "", err
+		}
+
+		if err := jpeg.Encode(&b, img, &jpeg.Options{Quality: 100}); err != nil {
+			return nil, "", err
+		}
+	} else if ext == ".png" || ext == ".PNG" {
+		ext = "png"
+		img, err := jpeg.Decode(r)
+		if err != nil {
+			return nil, "", err
+		}
+
+		if err = png.Encode(&b, img); err != nil {
+			return nil, "", err
+		}
+	} else {
+		return nil, "", errors.New("Image format must be jpeg or png")
+	}
+
+	return &b, ext, nil
 }
