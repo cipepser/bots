@@ -13,6 +13,8 @@
 
 ### How to Use
 
+#### メッセージを送る
+
 ```go
 
 msg := "hello"
@@ -23,6 +25,30 @@ if err != nil {
 }
 
 ```
+
+#### 画像を送る
+
+LINE Notifyの仕様上、メッセージは必須項目のため画像を送信するときにもメッセージが必要。  
+以下の例ではローカルにある`tmp.jpg`を送信するとき。
+`SendImage`の第2引数でファイルを指定するが、`io.Reader`型であればよい。
+
+```go
+
+msg := "send an image"
+filename := "./tmp.jpg"
+
+f, err := os.Open(filename)
+if err != nil {
+  panic(err)
+}
+defer f.Close()
+
+if err := line.SendImage(msg, f, filename); err != nil {
+  panic(err)
+}
+
+```
+
 
 ### トークン
 
