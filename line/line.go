@@ -3,6 +3,8 @@ package line
 import (
 	"bytes"
 	"errors"
+	"fmt"
+	"image"
 	"io"
 	"log"
 	"mime/multipart"
@@ -90,6 +92,7 @@ func SendImage(msg string, img io.Reader) error {
 
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
+	// defer w.Close()
 
 	fw, err := w.CreateFormField("message")
 	if err != nil {
@@ -100,17 +103,33 @@ func SendImage(msg string, img io.Reader) error {
 	}
 
 	part := make(textproto.MIMEHeader)
+	// TODO: filenameを動的に変えられるようにする
 	part.Set("Content-Disposition", `form-data; name="imageFile"; filename="sample.jpg"`)
+
+	var buf bytes.Buffer
+	tee := io.TeeReader(img, &buf)
+	_, format, err := image.DecodeConfig(tee)
+	if err != nil {
+		return err
+	}
+	fmt.Println(format)
+
+	if format == "jpeg" {
+		part.Set("Content-Type", "image/jpeg")
+	} else if format == "png" {
+		part.Set("Content-Type", "image/png")
+	} else {
+		return errors.New("LINE Notify supports only jpeg/png image format")
+	}
+
 	part.Set("Content-Type", "image/jpeg")
 	fw, err = w.CreatePart(part)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	io.Copy(fw, img)
-
-	w.Close()
-
+	io.Copy(fw, &buf)
+	w.Close() // boundaryの書き込み
 	req, err := http.NewRequest("POST", u.String(), &b)
 	if err != nil {
 		return err
