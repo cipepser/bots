@@ -3,7 +3,6 @@ package line
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"image"
 	"io"
 	"log"
@@ -76,7 +75,7 @@ func SendMessage(msg string) error {
 }
 
 // SendImage sent the image to Talkroom
-func SendImage(msg string, img io.Reader) error {
+func SendImage(msg string, img io.Reader, filename string) error {
 	t := &Token{}
 	err := util.GetToken("./token/line_test.json", t)
 	if err != nil {
@@ -102,8 +101,10 @@ func SendImage(msg string, img io.Reader) error {
 	}
 
 	part := make(textproto.MIMEHeader)
-	// TODO: filenameを動的に変えられるようにする
-	part.Set("Content-Disposition", `form-data; name="imageFile"; filename="sample.jpg"`)
+	if filename == "" {
+		filename = "sample.jpg"
+	}
+	part.Set("Content-Disposition", `form-data; name="imageFile"; filename=`+filename)
 
 	var buf bytes.Buffer
 	tee := io.TeeReader(img, &buf)
@@ -111,7 +112,6 @@ func SendImage(msg string, img io.Reader) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(format)
 
 	if format == "jpeg" {
 		part.Set("Content-Type", "image/jpeg")
