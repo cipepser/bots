@@ -124,7 +124,6 @@ func SendImage(msg string, img io.Reader, filename string) error {
 		return errors.New("LINE Notify supports only jpeg/png image format")
 	}
 
-	part.Set("Content-Type", "image/jpeg")
 	fw, err = w.CreatePart(part)
 	if err != nil {
 		log.Fatal(err)
