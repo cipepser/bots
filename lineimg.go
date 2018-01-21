@@ -1,31 +1,22 @@
 package main
 
 import (
-	"bytes"
-	"image"
-	"image/jpeg"
-	"io"
+	"os"
 
 	"./line"
 )
 
 func main() {
-
 	msg := "send an image"
+	filename := "./tmp.jpg"
 
-	x := 0
-	y := 0
-	width := 100
-	height := 50
-
-	img := image.NewRGBA(image.Rect(x, y, width, height))
-
-	b := &bytes.Buffer{}
-	if err := jpeg.Encode(b, img, &jpeg.Options{100}); err != nil {
+	f, err := os.Open(filename)
+	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 
-	if err := line.SendImage(msg, io.Reader(b)); err != nil {
+	if err := line.SendImage(msg, f, filename); err != nil {
 		panic(err)
 	}
 
