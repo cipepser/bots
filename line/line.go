@@ -92,7 +92,6 @@ func SendImage(msg string, img io.Reader) error {
 
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
-	// defer w.Close()
 
 	fw, err := w.CreateFormField("message")
 	if err != nil {
