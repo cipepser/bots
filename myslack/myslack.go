@@ -24,29 +24,25 @@ func NewRTM() (*slack.RTM, error) {
 
 func run(api *slack.Client, Msg, ch chan string) int {
 	rtm := api.NewRTM()
+	channel := "" // <CHANNLE ID>
 	go rtm.ManageConnection()
 
 	for {
 		select {
 		case msg := <-Msg:
 			log.Print("message: ", msg)
-			// rtm.SendMessage(rtm.NewOutgoingMessage("*************************NEW MESSAGE!!*************************", "C891LB9PF"))
-			rtm.SendMessage(rtm.NewOutgoingMessage(msg, "C891LB9PF"))
-			// rtm.SendMessage(rtm.NewOutgoingMessage("***************************************************************", "C891LB9PF"))
+			rtm.SendMessage(rtm.NewOutgoingMessage(msg, channel))
 		case msg := <-rtm.IncomingEvents:
 			switch ev := msg.Data.(type) {
 			case *slack.HelloEvent:
 				log.Print("bot start")
-				rtm.SendMessage(rtm.NewOutgoingMessage("bot start", "C891LB9PF"))
-
-				// rtm.SendMessage(rtm.NewOutgoingMessage("bot start", ev.Channel))
+				rtm.SendMessage(rtm.NewOutgoingMessage("bot start", channel))
 
 			case *slack.MessageEvent:
 				log.Printf("Message: %v\n", ev)
-				// fmt.Println()
 				fmt.Println("****", ev.Channel, "****")
 				ch <- ev.Msg.Text
-				// rtm.SendMessage(rtm.NewOutgoingMessage("new message", ev.Channel))
+				rtm.SendMessage(rtm.NewOutgoingMessage("new message", ev.Channel))
 
 			case *slack.InvalidAuthEvent:
 				log.Print("Invalid credentials")
